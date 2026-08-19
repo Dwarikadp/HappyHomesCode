@@ -2109,3 +2109,174 @@ section.walkthrough[hidden] { display: none !important; }
 /* keep clear of the mobile bottom bar */
 @media (max-width: 900px) { .sound-toggle { bottom: 80px; } }
 @media (max-width: 600px) { .sound-toggle { left: 12px; padding: 10px 12px; } .sound-toggle__label { display: none; } }
+
+/* ============================================================
+   POLISH PASS 2: blob fixes, map button, rail, FAQ, configs,
+   lightbox controls, phone country-code, pricing animation
+   ============================================================ */
+
+/* ---- FIX: badge/button stretched because both top & bottom were set ---- */
+.plans__zoom {
+  top: auto !important; bottom: 14px !important; right: 14px !important; left: auto !important;
+  width: auto !important; height: auto !important;
+  background: rgba(6,44,36,0.9) !important; color: var(--gold) !important;
+  padding: 8px 14px !important; border-radius: 999px !important;
+  border: 1px solid rgba(230,193,74,0.4);
+  display: inline-flex !important; align-items: center; gap: 6px;
+}
+.location__map-link {
+  top: auto !important; bottom: 16px !important; right: 16px !important; left: auto !important;
+  width: auto !important; height: auto !important;
+  display: inline-flex !important; align-items: center; gap: 7px;
+  background: var(--gold) !important; color: var(--aubergine) !important;
+  padding: 10px 16px !important; border-radius: 999px !important;
+  font-size: 11px !important; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35) !important; border: 0 !important;
+  transition: transform .2s var(--ease), background .2s var(--ease);
+}
+.location__map-link::before {
+  content: ''; width: 12px; height: 12px; flex: 0 0 auto;
+  background: var(--aubergine);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z'/><circle cx='12' cy='10' r='2.5' fill='white'/></svg>") center/contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z'/></svg>") center/contain no-repeat;
+}
+.location__map-link:hover { transform: translateY(-2px); background: var(--gold-2) !important; }
+
+/* ---- RIGHT RAIL: consistent pills, icon centred, gold hover ---- */
+.rail { right: 16px !important; gap: 12px !important; }
+.rail__btn {
+  width: 54px !important; height: 54px !important; border-radius: 16px !important;
+  background: rgba(6,44,36,0.92) !important; border: 1px solid rgba(230,193,74,0.38) !important;
+  color: var(--cream) !important;
+  display: flex !important; align-items: center !important; justify-content: flex-start !important;
+  padding: 0 !important; gap: 0 !important; overflow: hidden !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.30);
+  transition: width .28s var(--ease), background .2s, color .2s, border-color .2s, transform .2s;
+}
+.rail__btn > svg { margin: 0 17px !important; flex: 0 0 auto; }
+.rail__btn span { opacity: 0; white-space: nowrap; padding-right: 20px; font-size: 12px; letter-spacing: 0.08em; font-weight: 700; transition: opacity .2s; }
+.rail__btn:hover { width: 214px !important; background: var(--gold) !important; color: var(--aubergine) !important; border-color: var(--gold) !important; transform: translateX(-2px); }
+.rail__btn:hover span { opacity: 1; }
+.rail__btn--free { width: 54px !important; background: var(--gold) !important; color: var(--aubergine) !important; border-color: var(--gold) !important; }
+.rail__btn--free span, .rail__btn--free span i { color: var(--aubergine) !important; }
+.rail__btn--free:hover { background: var(--gold-2) !important; }
+
+/* ---- FAQ: dark glass accordion, fixed hover, animated reveal ---- */
+.faq__list details { background: rgba(13,74,58,0.42) !important; border: 1px solid rgba(230,193,74,0.22) !important; border-radius: 16px !important; }
+.faq__list details[open] { border-color: rgba(230,193,74,0.55) !important; background: rgba(13,74,58,0.60) !important; }
+.faq__list summary { color: var(--cream) !important; font-size: 18px !important; padding: 18px 62px 18px 20px !important; gap: 12px; }
+.faq__list summary .faq__icon { color: var(--gold) !important; display: inline-flex; }
+.faq__list summary:hover { background: rgba(230,193,74,0.07) !important; color: var(--gold-2) !important; }
+.faq__list summary::after { color: var(--gold) !important; border-color: var(--gold) !important; }
+.faq__list details[open] summary::after { background: var(--gold) !important; color: var(--aubergine) !important; }
+.faq__list details > div { color: var(--text-dim-l) !important; }
+.faq__list details[open] > div { animation: faqReveal .35s var(--ease); }
+@keyframes faqReveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+/* ---- CONFIG specs: cleaner alignment ---- */
+.plans__specs li { padding: 13px 0 !important; align-items: baseline; }
+.plans__specs span { font-size: 10px !important; letter-spacing: 0.18em; }
+.plans__specs b { font-size: 19px !important; }
+
+/* ---- LIGHTBOX zoom controls: aligned, on-brand ---- */
+.lightbox__controls { gap: 10px !important; flex-wrap: wrap; }
+.lightbox__controls button[data-zoom] {
+  background: rgba(6,44,36,0.92) !important; border: 1.5px solid var(--gold) !important; color: var(--gold) !important;
+  height: 44px !important; min-width: 44px; padding: 0 16px; border-radius: 12px !important;
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 700; letter-spacing: 0.06em;
+}
+.lightbox__controls button[data-zoom]:hover { background: var(--gold) !important; color: var(--aubergine) !important; }
+.lightbox__controls .btn { height: 44px; }
+
+/* ---- PHONE country-code row ---- */
+.phone-row { display: flex; gap: 8px; align-items: stretch; }
+.phone-row .phone-cc { flex: 0 0 auto; width: 140px; }
+.phone-row input { flex: 1 1 auto; min-width: 0; }
+@media (max-width: 600px) { .phone-row .phone-cc { width: 112px; } }
+
+/* ---- PRICING: entrance animation (safe, additive) ---- */
+#pricing.is-in .pricing__starter { animation: revealUp .6s .04s var(--ease) both; }
+#pricing.is-in .urgency-strip     { animation: revealUp .6s var(--ease) both; }
+#pricing.is-in .price-card        { animation: revealUp .6s .12s var(--ease) both; }
+#pricing.is-in .price-card--feature { animation-delay: .22s; }
+#pricing.is-in .pricing__assurances { animation: revealUp .6s .28s var(--ease) both; }
+@keyframes revealUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  #pricing.is-in .pricing__starter, #pricing.is-in .urgency-strip,
+  #pricing.is-in .price-card, #pricing.is-in .pricing__assurances { animation: none !important; }
+}
+
+/* ---- Phone row: keep number field inside its column ---- */
+.phone-row input { width: auto !important; flex: 1 1 auto; min-width: 0; }
+.phone-row .phone-cc { flex: 0 0 auto; }
+/* Count-up number must match the big price type ---- */
+.pricing__starter b [data-count-to],
+.hero__price b [data-count-to] { font: inherit; color: inherit; font-style: inherit; }
+
+/* ---- Phone row: force the two-part layout over base select width:100% ---- */
+.phone-row { display: flex !important; gap: 8px; align-items: stretch; width: 100%; }
+.phone-row .phone-cc { flex: 0 0 148px !important; width: 148px !important; }
+.phone-row input[type="tel"] { flex: 1 1 auto !important; width: auto !important; min-width: 0 !important; }
+@media (max-width: 600px) { .phone-row .phone-cc { flex: 0 0 120px !important; width: 120px !important; } }
+.pricing__starter b [data-count-to] { letter-spacing: normal !important; }
+
+/* ============================================================
+   POLISH PASS 3: reset controls, FAQ alignment
+   ============================================================ */
+/* Lightbox zoom controls: uniform height, centred, non-italic */
+.lightbox__controls { gap: 8px !important; align-items: center; }
+.lightbox__controls button[data-zoom] {
+  height: 46px !important; min-width: 46px; padding: 0 18px !important; border-radius: 12px !important;
+  font-size: 15px !important; font-weight: 700 !important; line-height: 1 !important;
+  font-family: var(--f-body) !important; font-style: normal !important;
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+}
+.lightbox__controls .btn { height: 46px !important; display: inline-flex !important; align-items: center; }
+
+/* FAQ: tidy alignment of icon, question, toggle and answer */
+.faq__list summary { align-items: center !important; gap: 14px !important; padding: 18px 62px 18px 22px !important; line-height: 1.3 !important; }
+.faq__list summary .faq__icon { flex: 0 0 auto; width: 22px; height: 22px; }
+.faq__list summary .faq__icon svg { width: 22px; height: 22px; display: block; }
+.faq__list details > div { padding: 2px 24px 22px 58px !important; }
+@media (max-width: 600px) { .faq__list details > div { padding-left: 22px !important; } .faq__list summary { padding-left: 18px !important; } }
+
+/* ============================================================
+   POLISH PASS 4: FAQ +/x toggle, config spec spacing
+   ============================================================ */
+/* FAQ: "+" when closed, rotate to "x" when open (no minus) */
+.faq__list summary::after { content: '+' !important; transition: transform .28s var(--ease), background .25s var(--ease), color .25s var(--ease); }
+.faq__list details[open] summary::after { content: '+' !important; transform: translateY(-50%) rotate(45deg) !important; background: var(--gold) !important; color: var(--aubergine) !important; }
+
+/* CONFIG specs: stop the value touching the next column's label */
+.plans__specs { grid-template-columns: 1fr 1fr; column-gap: 34px !important; }
+.plans__specs li { gap: 16px; }
+.plans__specs li:nth-child(odd)  { padding-right: 24px !important; border-right: 1px solid var(--line-l); }
+.plans__specs li:nth-child(even) { padding-left: 24px !important; }
+.plans__specs span { flex: 0 0 auto; }
+.plans__specs b { white-space: nowrap; text-align: right; }
+@media (max-width: 700px) {
+  .plans__specs { grid-template-columns: 1fr; column-gap: 0 !important; }
+  .plans__specs li:nth-child(odd) { border-right: 0; padding-right: 0 !important; }
+  .plans__specs li:nth-child(even) { padding-left: 0 !important; }
+}
+
+/* FAQ toggle: explicit + (closed) and × (open), clearly visible */
+.faq__list summary::after { content: '+' !important; transform: translateY(-50%) !important; font-weight: 400 !important; }
+.faq__list details[open] summary::after { content: '\00D7' !important; transform: translateY(-50%) !important; background: var(--gold) !important; color: var(--aubergine) !important; font-weight: 500 !important; }
+
+/* FAQ toggle (final): draw + as SVG lines, rotate to x on open — always visible */
+.faq__list summary::after {
+  content: '' !important;
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 5v14M5 12h14' stroke='%23e6c14a' stroke-width='2.4' stroke-linecap='round'/></svg>") !important;
+  background-repeat: no-repeat !important; background-position: center !important; background-size: 15px 15px !important;
+  border: 1.6px solid var(--gold) !important;
+  transition: transform .3s var(--ease), background-color .25s var(--ease) !important;
+}
+.faq__list details[open] summary::after {
+  content: '' !important;
+  transform: translateY(-50%) rotate(45deg) !important;
+  background-color: var(--gold) !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 5v14M5 12h14' stroke='%23062c24' stroke-width='2.8' stroke-linecap='round'/></svg>") !important;
+}
+.faq__list summary::after { background-size: 16px 16px !important; background-color: rgba(230,193,74,0.06) !important; }

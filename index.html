@@ -240,7 +240,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
             <div class="field field--full">
               <label for="h-phone">Phone Number <span aria-hidden="true">*</span></label>
-              <input id="h-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" pattern="[0-9 +\-()]{6,20}" placeholder="Mobile number" />
+              <div class="phone-row"><select class="phone-cc" id="h-cc" name="cc" aria-label="Country code"><option value="+91" selected>🇮🇳 India +91</option><option value="+977">🇳🇵 Nepal +977</option><option value="+971">🇦🇪 UAE +971</option><option value="+1">🇺🇸 USA / Canada +1</option><option value="+44">🇬🇧 UK +44</option><option value="+61">🇦🇺 Australia +61</option><option value="+65">🇸🇬 Singapore +65</option><option value="+974">🇶🇦 Qatar +974</option><option value="+966">🇸🇦 Saudi Arabia +966</option><option value="+880">🇧🇩 Bangladesh +880</option><option value="+60">🇲🇾 Malaysia +60</option><option value="+968">🇴🇲 Oman +968</option></select><input id="h-phone" name="phone" type="tel" required inputmode="numeric" autocomplete="tel" pattern="[0-9]{6,15}" placeholder="Number only" /></div>
             </div>
             <div class="field">
               <label for="h-config">Configuration</label>
@@ -272,7 +272,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <option>Ready to move in</option>
                 <option>Within 1 - 3 months</option>
                 <option>Within 3 - 6 months</option>
-                <option>Just exploring</option>
               </select>
             </div>
             <div class="field field--full">
@@ -393,8 +392,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <p>Share your name and number once and the full set of floor plans, master plan and brochure unlocks instantly across the page.</p>
                 <button class="btn btn--pink btn--pulse" data-open-modal>Unlock the plans</button>
               </div>
-              <button class="plans__image is-active" data-plan-image="master" data-open-lightbox data-img="assets/site-plan.jpg">
-                <img src="assets/site-plan.jpg" alt="Master plan of Happy Homes" loading="lazy" />
+              <button class="plans__image is-active" data-plan-image="master" data-open-lightbox data-img="assets/master-plan.jpg">
+                <img src="assets/master-plan.jpg" alt="Master plan of Happy Homes" loading="lazy" />
                 <span class="plans__zoom">Click to zoom</span>
               </button>
               <button class="plans__image" data-plan-image="typical" data-open-lightbox data-img="assets/floor-3bhk-2.jpg">
@@ -478,7 +477,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="pricing__shell">
           <div class="pricing__starter">
             <span>Starting from</span>
-            <b>&#8377; 57 Lakhs<i>*</i></b>
+            <b>&#8377; <span data-count-to="57" data-suffix="">57</span> Lakhs<i>*</i></b>
             <small>onwards</small>
           </div>
           <div class="pricing__gate" id="pricingGate">
@@ -491,7 +490,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <article class="price-card">
                 <header class="price-card__head">
                   <span class="price-card__tag">2 BHK</span>
-                  <span class="price-card__facing">North facing</span>
                 </header>
                 <b class="price-card__price">&#8377; 57&ndash;58<i>L*</i></b>
                 <ul class="price-card__meta">
@@ -504,7 +502,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <span class="price-card__ribbon">Most popular</span>
                 <header class="price-card__head">
                   <span class="price-card__tag">3 BHK</span>
-                  <span class="price-card__facing">North facing</span>
                 </header>
                 <b class="price-card__price">&#8377; 65&ndash;69<i>L*</i></b>
                 <ul class="price-card__meta">
@@ -617,9 +614,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="emi__readout-label">Monthly EMI</span>
             <b class="emi__readout-amount" id="emiEMI">₹ ----</b>
             <ul class="emi__breakup">
-              <li><span>Loan amount</span><b id="emiLoan">&mdash;</b></li>
-              <li><span>Total interest</span><b id="emiInterest">&mdash;</b></li>
-              <li><span>Total payable</span><b id="emiTotal">&mdash;</b></li>
+              <li><span>Loan amount</span><b id="emiLoan">&#8377; 0</b></li>
+              <li><span>Total interest</span><b id="emiInterest">&#8377; 0</b></li>
+              <li><span>Total payable</span><b id="emiTotal">&#8377; 0</b></li>
             </ul>
             <button class="btn btn--pink btn--block btn--pulse" data-open-modal>Speak to a sales consultant</button>
             <small>Illustrative only. Final rates and tenure depend on your bank.</small>
@@ -758,7 +755,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="testimonials__grid">
           <article class="testimonial">
-            <p>&ldquo;We were nervous first-time buyers. The team let us take our time, answered every question on WhatsApp, and never once pushed us. On possession day the flat matched the plan exactly &mdash; same carpet area, same finishing. That honesty is why we recommend them to family.&rdquo;</p>
+            <p>&ldquo;We were nervous first-time buyers. The team let us take our time, answered every question on WhatsApp, and never once pushed us. On possession day the flat matched the plan exactly, same carpet area, same finishing. That honesty is why we recommend them to family.&rdquo;</p>
             <div class="testimonial__by">
               <div class="testimonial__avatar">S</div>
               <div><b>Sourav &amp; Ipsita</b><span>3 BHK owners &middot; CDA, Cuttack</span></div>
@@ -779,7 +776,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </article>
           <article class="testimonial">
-            <p>&ldquo;Booking was clean &mdash; every payment stage was written down, the loan tie-up saved us weeks, and nothing was hidden in fine print. Two months in, the society already feels like a neighbourhood. Our daughter knows half the kids on the block.&rdquo;</p>
+            <p>&ldquo;Booking was clean, every payment stage was written down, the loan tie-up saved us weeks, and nothing was hidden in fine print. Two months in, the society already feels like a neighbourhood. Our daughter knows half the kids on the block.&rdquo;</p>
             <div class="testimonial__by">
               <div class="testimonial__avatar">P</div>
               <div><b>Priyanka &amp; Debasish</b><span>3 BHK owners &middot; Bhubaneswar</span></div>
@@ -822,8 +819,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <form class="contact__form" id="contactForm" name="contact" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
             <input type="hidden" name="form-name" value="contact" />
             <p class="hidden" style="display:none"><label>Leave blank: <input name="bot-field" /></label></p>
-            <div class="field"><label for="c-name">Full Name *</label><input id="c-name" name="name" type="text" required placeholder="Your name" /></div>
-            <div class="field"><label for="c-phone">Phone *</label><input id="c-phone" name="phone" type="tel" required inputmode="tel" pattern="[0-9 +\-()]{6,20}" placeholder="Mobile number" /></div>
+            <div class="field field--full"><label for="c-name">Full Name *</label><input id="c-name" name="name" type="text" required placeholder="Your name" /></div>
+            <div class="field field--full"><label for="c-phone">Phone *</label><div class="phone-row"><select class="phone-cc" id="c-cc" name="cc" aria-label="Country code"><option value="+91" selected>🇮🇳 India +91</option><option value="+977">🇳🇵 Nepal +977</option><option value="+971">🇦🇪 UAE +971</option><option value="+1">🇺🇸 USA / Canada +1</option><option value="+44">🇬🇧 UK +44</option><option value="+61">🇦🇺 Australia +61</option><option value="+65">🇸🇬 Singapore +65</option><option value="+974">🇶🇦 Qatar +974</option><option value="+966">🇸🇦 Saudi Arabia +966</option><option value="+880">🇧🇩 Bangladesh +880</option><option value="+60">🇲🇾 Malaysia +60</option><option value="+968">🇴🇲 Oman +968</option></select><input id="c-phone" name="phone" type="tel" required inputmode="numeric" autocomplete="tel" pattern="[0-9]{6,15}" placeholder="Number only" /></div></div>
             <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" placeholder="you@example.com" /></div>
             <div class="field"><label for="c-config">Configuration</label>
               <select id="c-config" name="config">
@@ -848,7 +845,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <option>Ready to move in</option>
                 <option>Within 1 - 3 months</option>
                 <option>Within 3 - 6 months</option>
-                <option>Just exploring</option>
               </select>
             </div>
             <div class="field field--full"><label for="c-message">Message</label>
@@ -921,8 +917,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <form class="modal__form" id="enquiryForm" name="modal-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
             <input type="hidden" name="form-name" value="modal-enquiry" />
             <p class="hidden" style="display:none"><label>Leave blank: <input name="bot-field" /></label></p>
-        <div class="field"><label for="m-name">Name *</label><input id="m-name" name="name" type="text" required placeholder="Your full name" /></div>
-        <div class="field"><label for="m-phone">Phone *</label><input id="m-phone" name="phone" type="tel" required inputmode="tel" pattern="[0-9 +\-()]{6,20}" placeholder="Mobile number" /></div>
+        <div class="field field--full"><label for="m-name">Name *</label><input id="m-name" name="name" type="text" required placeholder="Your full name" /></div>
+        <div class="field field--full"><label for="m-phone">Phone *</label><div class="phone-row"><select class="phone-cc" id="m-cc" name="cc" aria-label="Country code"><option value="+91" selected>🇮🇳 India +91</option><option value="+977">🇳🇵 Nepal +977</option><option value="+971">🇦🇪 UAE +971</option><option value="+1">🇺🇸 USA / Canada +1</option><option value="+44">🇬🇧 UK +44</option><option value="+61">🇦🇺 Australia +61</option><option value="+65">🇸🇬 Singapore +65</option><option value="+974">🇶🇦 Qatar +974</option><option value="+966">🇸🇦 Saudi Arabia +966</option><option value="+880">🇧🇩 Bangladesh +880</option><option value="+60">🇲🇾 Malaysia +60</option><option value="+968">🇴🇲 Oman +968</option></select><input id="m-phone" name="phone" type="tel" required inputmode="numeric" autocomplete="tel" pattern="[0-9]{6,15}" placeholder="Number only" /></div></div>
         <div class="field field--full"><label for="m-email">Email</label><input id="m-email" name="email" type="email" placeholder="you@example.com" /></div>
         <div class="field"><label for="m-config">Configuration</label>
           <select id="m-config" name="config">
@@ -947,7 +943,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <option>Ready to move in</option>
             <option>Within 1 - 3 months</option>
             <option>Within 3 - 6 months</option>
-            <option>Just exploring</option>
           </select>
         </div>
         <div class="field field--full"><label for="m-message">Message</label>
@@ -978,8 +973,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <form class="modal__form" id="siteVisitForm" name="site-visit" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
             <input type="hidden" name="form-name" value="site-visit" />
             <p class="hidden" style="display:none"><label>Leave blank: <input name="bot-field" /></label></p>
-        <div class="field"><label for="sv-name">Name *</label><input id="sv-name" name="name" type="text" required placeholder="Your name" /></div>
-        <div class="field"><label for="sv-phone">Phone *</label><input id="sv-phone" name="phone" type="tel" required pattern="[0-9 +\-()]{6,20}" placeholder="Mobile number" /></div>
+        <div class="field field--full"><label for="sv-name">Name *</label><input id="sv-name" name="name" type="text" required placeholder="Your name" /></div>
+        <div class="field field--full"><label for="sv-phone">Phone *</label><div class="phone-row"><select class="phone-cc" id="sv-cc" name="cc" aria-label="Country code"><option value="+91" selected>🇮🇳 India +91</option><option value="+977">🇳🇵 Nepal +977</option><option value="+971">🇦🇪 UAE +971</option><option value="+1">🇺🇸 USA / Canada +1</option><option value="+44">🇬🇧 UK +44</option><option value="+61">🇦🇺 Australia +61</option><option value="+65">🇸🇬 Singapore +65</option><option value="+974">🇶🇦 Qatar +974</option><option value="+966">🇸🇦 Saudi Arabia +966</option><option value="+880">🇧🇩 Bangladesh +880</option><option value="+60">🇲🇾 Malaysia +60</option><option value="+968">🇴🇲 Oman +968</option></select><input id="sv-phone" name="phone" type="tel" required inputmode="numeric" autocomplete="tel" pattern="[0-9]{6,15}" placeholder="Number only" /></div></div>
         <div class="field field--full"><label for="sv-email">Email</label><input id="sv-email" name="email" type="email" placeholder="you@example.com" /></div>
         <div class="field"><label for="sv-config">Configuration</label>
           <select id="sv-config" name="config">
@@ -1004,7 +999,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <option>Ready to move in</option>
             <option>Within 1 - 3 months</option>
             <option>Within 3 - 6 months</option>
-            <option>Just exploring</option>
           </select>
         </div>
         <div class="field"><label for="sv-date">Preferred Date</label><input id="sv-date" name="date" type="date" /></div>
@@ -1035,8 +1029,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <form class="modal__form" id="videoForm" name="video-call" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
             <input type="hidden" name="form-name" value="video-call" />
             <p class="hidden" style="display:none"><label>Leave blank: <input name="bot-field" /></label></p>
-        <div class="field"><label for="vc-name">Name *</label><input id="vc-name" name="name" type="text" required placeholder="Your name" /></div>
-        <div class="field"><label for="vc-phone">WhatsApp Number *</label><input id="vc-phone" name="phone" type="tel" required pattern="[0-9 +\-()]{6,20}" placeholder="Mobile number" /></div>
+        <div class="field field--full"><label for="vc-name">Name *</label><input id="vc-name" name="name" type="text" required placeholder="Your name" /></div>
+        <div class="field field--full"><label for="vc-phone">WhatsApp Number *</label><div class="phone-row"><select class="phone-cc" id="vc-cc" name="cc" aria-label="Country code"><option value="+91" selected>🇮🇳 India +91</option><option value="+977">🇳🇵 Nepal +977</option><option value="+971">🇦🇪 UAE +971</option><option value="+1">🇺🇸 USA / Canada +1</option><option value="+44">🇬🇧 UK +44</option><option value="+61">🇦🇺 Australia +61</option><option value="+65">🇸🇬 Singapore +65</option><option value="+974">🇶🇦 Qatar +974</option><option value="+966">🇸🇦 Saudi Arabia +966</option><option value="+880">🇧🇩 Bangladesh +880</option><option value="+60">🇲🇾 Malaysia +60</option><option value="+968">🇴🇲 Oman +968</option></select><input id="vc-phone" name="phone" type="tel" required inputmode="numeric" autocomplete="tel" pattern="[0-9]{6,15}" placeholder="Number only" /></div></div>
         <div class="field field--full"><label for="vc-email">Email</label><input id="vc-email" name="email" type="email" placeholder="you@example.com" /></div>
         <div class="field"><label for="vc-config">Configuration</label>
           <select id="vc-config" name="config">
@@ -1061,7 +1055,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <option>Ready to move in</option>
             <option>Within 1 - 3 months</option>
             <option>Within 3 - 6 months</option>
-            <option>Just exploring</option>
           </select>
         </div>
         <div class="field field--full"><label for="vc-message">Message</label>
@@ -1078,7 +1071,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="lightbox__backdrop" data-close-lightbox></div>
     <button class="lightbox__close" data-close-lightbox aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     <div class="lightbox__inner">
-      <div class="lightbox__viewport" id="lightboxViewport"><img id="lightboxImg" src="assets/site-plan.jpg" alt="Plan" /></div>
+      <div class="lightbox__viewport" id="lightboxViewport"><img id="lightboxImg" src="assets/master-plan.jpg" alt="Plan" /></div>
       <div class="lightbox__controls">
         <button data-zoom="-" aria-label="Zoom out">&minus;</button>
         <button data-zoom="0" aria-label="Reset">Reset</button>
@@ -1125,13 +1118,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </ul>
       <p class="projects-grid__note">*Indicative reference of past delivered and ongoing addresses. Full portfolio available on request.</p>
     </div>
-  </div>
-
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="lightbox__backdrop" data-close-lightbox></div>
-    <button class="lightbox__close" data-close-lightbox aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
-    <img class="lightbox__img" id="lightboxImg" src="" alt="" />
   </div>
 
   <!-- AMBIENT SOUND (plays on entry, with on/off toggle) -->

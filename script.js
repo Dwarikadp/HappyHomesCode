@@ -251,9 +251,11 @@
     f.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(f);
+      const cc = (fd.get('cc') || '').toString().trim();
+      const digits = (fd.get('phone') || '').toString().replace(/\D/g, '');
       const p = {
         name: (fd.get('name') || '').toString().trim(),
-        phone: (fd.get('phone') || '').toString().trim(),
+        phone: digits ? ((cc ? '(' + cc + ') ' : '') + digits) : '',
         email: (fd.get('email') || '').toString().trim(),
         budget: (fd.get('budget') || '').toString().trim(),
         timeline: (fd.get('timeline') || '').toString().trim(),
@@ -309,6 +311,24 @@
   bindForm('siteVisitForm', 'Site Visit form',  { brochure: false });
   bindForm('videoForm',     'Video call form',  { brochure: false });
 
+  /* ========== PHONE: allow digits only in the number field ========== */
+  $$('.phone-row input[type="tel"]').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const cleaned = inp.value.replace(/\D/g, '');
+      if (inp.value !== cleaned) inp.value = cleaned;
+    });
+  });
+
+  /* ========== PRICING: play entrance animation when it scrolls in ========== */
+  (function () {
+    const sec = document.getElementById('pricing');
+    if (!sec) return;
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach((e) => { if (e.isIntersecting) { sec.classList.add('is-in'); io.disconnect(); } });
+    }, { threshold: 0.18 });
+    io.observe(sec);
+  })();
+
   /* ========== AMBIENT SOUND (cazrd-style, on/off, remembers choice) ========== */
   (function () {
     const audio = $('#ambientAudio');
@@ -339,17 +359,22 @@
     }
     function pause() { fadeTo(0, () => audio.pause()); }
 
-    // If the browser blocks autoplay, start on the first real interaction
+    // Browsers block audible autoplay until the first interaction, so we start
+    // the moment the visitor does anything at all: move, tap, key, or scroll.
+    const GESTURES = ['pointerdown', 'pointermove', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
     let armed = false;
     function armGesture() {
       if (armed) return; armed = true;
       const go = (ev) => {
         if (ev && ev.target && ev.target.closest && ev.target.closest('#soundToggle')) return; // button handles itself
-        if (pref !== 'off' && audio.paused) { const p = audio.play(); if (p && p.then) p.then(() => fadeTo(TARGET)).catch(() => {}); }
-        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(e => window.removeEventListener(e, go, true));
+        if (pref !== 'off' && audio.paused) {
+          const p = audio.play();
+          if (p && p.then) p.then(() => fadeTo(TARGET)).catch(() => {});
+        }
+        GESTURES.forEach(e => window.removeEventListener(e, go, true));
         armed = false;
       };
-      ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(e => window.addEventListener(e, go, true));
+      GESTURES.forEach(e => window.addEventListener(e, go, true));
     }
 
     btn.addEventListener('click', (e) => {
@@ -358,7 +383,7 @@
       else              { pref = 'off'; try { localStorage.setItem('chh_sound', 'off'); } catch (_) {} pause(); }
     });
 
-    if (pref !== 'off') play();   // attempt on load; falls back to first-gesture if blocked
+    if (pref !== 'off') { play(); armGesture(); }   // attempt immediately, and guarantee start on first interaction
   })();
 
   /* ========== HERO CGI VIDEO: force autoplay (muted) ========== */
@@ -698,25 +723,31 @@
     const vs = 'attribute vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0); }';
     const fs = [
       'precision highp float;',
-      'uniform vec2 u_res; uniform float u_time;',
+      'uniform vec2 u_res; uniform float u_time; uniform float u_reveal;',
       'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }',
       'float noise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); vec2 u=f*f*(3.0-2.0*f);',
       '  return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x), mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x), u.y); }',
-      'float fbm(vec2 p){ float v=0.0; float a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }',
+      'float fbm(vec2 p){ float v=0.0; float a=0.5; for(int i=0;i<6;i++){ v+=a*noise(p); p=p*2.02+vec2(1.7,9.2); a*=0.5; } return v; }',
       'void main(){',
       '  vec2 uv = gl_FragCoord.xy / u_res.xy;',
       '  vec2 q = uv; q.x *= u_res.x/u_res.y;',
-      '  float t = u_time*0.045;',
-      '  float f = fbm(q*2.0 + vec2(t, t*0.5));',
-      '  f = fbm(q*2.0 + f*1.3 + vec2(-t*0.6, t*0.9));',
-      '  vec3 deep  = vec3(0.020,0.100,0.082);',
-      '  vec3 green = vec3(0.043,0.255,0.200);',
-      '  vec3 gold  = vec3(0.902,0.757,0.290);',
-      '  vec3 col = mix(deep, green, smoothstep(0.25,0.95,f));',
-      '  float band = smoothstep(0.62,0.98,f) * (0.5 + 0.5*sin(u_time*0.28 + uv.y*3.5));',
-      '  col += gold * band * 0.42;',
-      '  float vig = smoothstep(1.2,0.15,length(uv-vec2(0.5,0.42)));',
-      '  col *= 0.5 + 0.6*vig;',
+      '  float t = u_time*0.06;',
+      '  float f = fbm(q*1.7 + vec2(t*0.6, -t*0.35));',
+      '  float g = fbm(q*2.7 + f*1.4 - vec2(t*0.5, t*0.7));',
+      '  vec3 deep  = vec3(0.015,0.088,0.070);',
+      '  vec3 green = vec3(0.040,0.240,0.190);',
+      '  vec3 gold  = vec3(0.950,0.800,0.340);',
+      '  vec3 col = mix(deep, green, smoothstep(0.20,0.96,f));',
+      // flowing gold ribbons
+      '  float ribbon = smoothstep(0.52,0.97,g) * (0.55 + 0.45*sin(u_time*0.40 + uv.y*6.0 + f*4.0));',
+      '  col += gold * ribbon * (0.30 + 0.45*u_reveal);',
+      // soft bloom at the centre that grows as the section reveals
+      '  float d = length(uv - vec2(0.5,0.42));',
+      '  col += gold * smoothstep(0.75,0.0,d) * 0.14 * u_reveal;',
+      // subtle sparkle
+      '  float spk = pow(noise(uv*u_res.xy*0.35 + u_time*2.0), 22.0);',
+      '  col += gold * spk * 0.35 * u_reveal;',
+      '  col *= 0.52 + 0.62*smoothstep(1.2,0.12,d);',
       '  gl_FragColor = vec4(col,1.0);',
       '}'
     ].join('\n');
@@ -737,6 +768,8 @@
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const uRes = gl.getUniformLocation(prog, 'u_res');
     const uTime = gl.getUniformLocation(prog, 'u_time');
+    const uReveal = gl.getUniformLocation(prog, 'u_reveal');
+    let reveal = 0;   // ramps 0 -> 1 the first time the section is on screen
 
     function resize(){
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -754,8 +787,10 @@
     function frame(now){
       if (!visible || prm) { running = false; if (prm) drawOnce(now); return; }
       const t = (now - start)/1000;
+      reveal += (1 - reveal) * 0.02;   // smooth ease toward full bloom
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, t);
+      gl.uniform1f(uReveal, reveal);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       requestAnimationFrame(frame);
     }
@@ -763,6 +798,7 @@
       const t = ((now||performance.now()) - start)/1000;
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, t);
+      gl.uniform1f(uReveal, prm ? 1 : reveal);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
     resize();
