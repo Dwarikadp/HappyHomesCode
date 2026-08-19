@@ -1937,3 +1937,175 @@ section.walkthrough[hidden] { display: none !important; }
 .plans__tab.is-active { background: var(--gold); color: var(--aubergine); }
 
 /* Hide entire toggle row visually if you want, but keep it interactive when locked: not needed */
+
+/* ============================================================
+   UPDATE PASS (Aug 2026): contact visibility, pricing redesign,
+   WebGL aurora, button alignment polish, map link
+   ============================================================ */
+
+/* ---- Contact section: text was dark-on-dark and invisible ---- */
+.contact { background: var(--aubergine); }
+.contact__intro .eyebrow { color: var(--gold) !important; }
+.contact__intro h2 { color: var(--cream) !important; }
+.contact__intro h2 em { color: var(--gold) !important; }
+.contact__intro p { color: var(--text-dim-l) !important; }
+.contact__channels { border-top: 1px solid var(--line-l) !important; }
+.contact__channels li { border-bottom: 1px solid var(--line-l) !important; }
+.contact__channels span { color: var(--text-mute-l) !important; }
+.contact__channels a { color: var(--gold-2) !important; }
+.contact__channels a:hover { color: var(--gold) !important; }
+
+/* ---- Button alignment polish (hover pop kept exactly as-is) ---- */
+.hero__actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch; }
+.hero__actions .btn { min-height: 52px; }
+.location__copy .btn { min-height: 50px; }
+.btn { will-change: transform; }
+.btn--outline:hover { box-shadow: 0 8px 22px rgba(230,193,74,0.18); }
+.btn span { display: inline-flex; align-items: center; }
+
+/* ---- Map: gold "Open in Maps" pill sits above the iframe ---- */
+.location__map { position: relative; }
+.location__map-link { z-index: 3; box-shadow: 0 6px 18px rgba(0,0,0,0.28); }
+.location__map-link:hover { background: var(--gold-2); }
+
+/* ============================================================
+   PRICING — "Honest numbers" made more aesthetic + WebGL aurora
+   ============================================================ */
+.pricing { position: relative; overflow: hidden; }
+.pricing > .container { position: relative; z-index: 2; }
+.pricing__aurora {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 0; display: block; opacity: 0.9;
+}
+.pricing::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(120% 82% at 50% 24%, rgba(6,44,36,0.24), rgba(6,44,36,0.74) 78%);
+}
+
+.pricing__starter {
+  position: relative;
+  box-shadow: 0 22px 54px rgba(230,193,74,0.32), inset 0 1px 0 rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.35);
+  overflow: hidden;
+}
+.pricing__starter::before {
+  content: ''; position: absolute; top: 0; left: -60%; width: 45%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: skewX(-18deg); animation: starterShine 5.5s ease-in-out infinite;
+}
+@keyframes starterShine { 0%,60% { left: -60%; } 85%,100% { left: 130%; } }
+
+/* Premium 2/3 BHK price cards */
+.pricing__band { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 6px; }
+.price-card {
+  position: relative; padding: 40px 24px 24px;
+  background: linear-gradient(165deg, rgba(13,74,58,0.58), rgba(8,46,35,0.74));
+  border: 1px solid rgba(230,193,74,0.28);
+  border-radius: 20px;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.32);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+  overflow: hidden;
+}
+.price-card::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-2));
+}
+.price-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 26px 60px rgba(0,0,0,0.42); }
+.price-card--feature {
+  border-color: rgba(230,193,74,0.5);
+  background: linear-gradient(165deg, rgba(19,92,72,0.62), rgba(8,46,35,0.82));
+}
+.price-card__ribbon {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(90deg, var(--gold), var(--gold-2)); color: var(--aubergine);
+  font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800;
+  padding: 6px 18px; border-radius: 0 0 10px 10px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.28); white-space: nowrap; z-index: 1;
+}
+.price-card__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.price-card__tag { font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; color: var(--gold-2); }
+.price-card__facing { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-mute-l); border: 1px solid var(--line-l); padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+.price-card__price { display: block; font-family: var(--f-display); font-style: italic; font-weight: 600; color: var(--cream); font-size: clamp(30px, 4vw, 40px); line-height: 1; margin-bottom: 16px; }
+.price-card__price i { font-style: normal; font-size: 0.5em; vertical-align: super; color: var(--gold); margin-left: 4px; letter-spacing: 0.02em; }
+.price-card__meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.price-card__meta li { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--line-l); padding-bottom: 8px; }
+.price-card__meta li:last-child { border-bottom: 0; padding-bottom: 0; }
+.price-card__meta span { font-size: 12px; color: var(--text-mute-l); letter-spacing: 0.03em; }
+.price-card__meta b { font-size: 13.5px; color: var(--cream); font-weight: 600; }
+.price-card .btn--outline { border-color: var(--gold) !important; color: var(--gold-2) !important; }
+.price-card .btn--outline:hover { background: rgba(230,193,74,0.12); }
+.price-card .btn--pink { color: var(--aubergine) !important; }
+
+/* Trust assurances row under the cards */
+.pricing__assurances { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 24px; margin: 24px auto 0; max-width: 700px; }
+.pricing__assurances li { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-dim-l); letter-spacing: 0.02em; }
+.pricing__assurances svg { color: var(--gold); flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  .pricing__band { grid-template-columns: 1fr; }
+  .price-card__ribbon { right: -42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pricing__starter::before { animation: none; display: none; }
+}
+
+/* ---- Walkthrough: 2 & 3 BHK interior videos ---- */
+.walkthrough { padding: 72px 0; }
+.walkthrough .container { max-width: 1180px; }
+.walkthrough__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 8px; }
+.walkthrough .walkthrough__video { margin: 0; border-radius: 20px; overflow: hidden; border: 2px solid var(--gold); box-shadow: 0 24px 60px rgba(0,0,0,0.42); background: #000; }
+.walkthrough .walkthrough__video video { width: 100%; height: auto; display: block; background: #000; }
+.walkthrough .walkthrough__video figcaption { padding: 12px 16px; text-align: center; background: rgba(13,74,58,0.72); color: var(--text-dim-l); font-size: 13px; letter-spacing: 0.06em; }
+@media (max-width: 760px){ .walkthrough__grid { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   PLANS: Floor-plan / Walkthrough mode toggle + in-viewport video
+   ============================================================ */
+.plans__mode { display: none; gap: 8px; margin-top: 12px; background: rgba(6,44,36,0.5); border: 1px solid rgba(230,193,74,0.22); border-radius: 999px; padding: 4px; width: max-content; }
+.plans__mode.is-visible { display: inline-flex; }
+.plans__mode-btn { padding: 8px 20px; border-radius: 999px; background: transparent; color: var(--text-dim-l); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; transition: background .25s var(--ease), color .25s var(--ease); }
+.plans__mode-btn.is-active { background: var(--gold); color: var(--aubergine); }
+.plans__mode-btn:not(.is-active):hover { color: var(--cream); }
+
+/* Unit tabs sit above the viewport now */
+.plans__tabs { margin: 14px 0 0; }
+
+/* In-viewport walkthrough video (matches the plan image framing) */
+.plans__video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; z-index: 2; }
+.plans__video[hidden] { display: none; }
+.plans__video video { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+
+/* ---- Hero overlay lightened so the CGI elevation video reads clearly ---- */
+.hero__overlay {
+  background:
+    linear-gradient(100deg, rgba(6,44,36,0.88) 0%, rgba(6,44,36,0.52) 34%, rgba(6,44,36,0.16) 62%, rgba(6,44,36,0.42) 100%),
+    linear-gradient(0deg, rgba(6,44,36,0.55) 0%, rgba(6,44,36,0) 42%) !important;
+}
+.hero__drone { z-index: 0; }
+
+/* ---- Ambient sound on/off toggle (cazrd-style) ---- */
+.sound-toggle {
+  position: fixed; left: 18px; bottom: 18px; z-index: 95;
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 10px 15px; border-radius: 999px;
+  background: rgba(6,44,36,0.82); border: 1px solid rgba(230,193,74,0.42);
+  color: var(--cream);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.38);
+  cursor: pointer;
+  transition: transform .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.sound-toggle:hover { transform: translateY(-2px); border-color: var(--gold); background: rgba(6,44,36,0.92); }
+.sound-toggle__bars { display: inline-flex; align-items: flex-end; gap: 2.5px; height: 16px; }
+.sound-toggle__bars i { width: 2.5px; height: 4px; background: var(--gold); border-radius: 2px; opacity: 0.6; }
+.sound-toggle.is-playing .sound-toggle__bars i { opacity: 1; animation: sndBar 900ms ease-in-out infinite; }
+.sound-toggle.is-playing .sound-toggle__bars i:nth-child(2) { animation-delay: .15s; }
+.sound-toggle.is-playing .sound-toggle__bars i:nth-child(3) { animation-delay: .30s; }
+.sound-toggle.is-playing .sound-toggle__bars i:nth-child(4) { animation-delay: .45s; }
+@keyframes sndBar { 0%,100% { height: 4px; } 50% { height: 15px; } }
+.sound-toggle__label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .sound-toggle.is-playing .sound-toggle__bars i { animation: none; height: 11px; } }
+/* keep clear of the mobile bottom bar */
+@media (max-width: 900px) { .sound-toggle { bottom: 80px; } }
+@media (max-width: 600px) { .sound-toggle { left: 12px; padding: 10px 12px; } .sound-toggle__label { display: none; } }

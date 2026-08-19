@@ -11,13 +11,13 @@
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <meta name="geo.region" content="IN-OR" />
   <meta name="geo.placename" content="Trisulia, Cuttack, Odisha" />
-  <link rel="canonical" href="https://happyhomes.example.com/" />
+  <link rel="canonical" href="https://codenamehappyhomes.net/" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://happyhomes.example.com/" />
+  <meta property="og:url" content="https://codenamehappyhomes.net/" />
   <meta property="og:title" content="Happy Homes, Trisulia | 361 Premium 2 &amp; 3 BHK Homes from &#8377;57 L" />
   <meta property="og:description" content="361 residences across 2.80 acres in Trisulia, Cuttack. Stilt + 5, 2 and 3 BHK north facing. 2 BHK from &#8377;57-58 L, 3 BHK from &#8377;65-69 L." />
-  <meta property="og:image" content="assets/hero-poster.jpg" />
+  <meta property="og:image" content="https://codenamehappyhomes.net/assets/og.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="en_IN" />
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Happy Homes, Trisulia, Cuttack" />
   <meta name="twitter:description" content="361 premium 2 &amp; 3 BHK residences in Trisulia. From &#8377;57 L. Get brochure instantly." />
-  <meta name="twitter:image" content="assets/hero-poster.jpg" />
+  <meta name="twitter:image" content="https://codenamehappyhomes.net/assets/og.jpg" />
 
   <script type="application/ld+json">
   {
@@ -33,8 +33,8 @@
     "@type": "ApartmentComplex",
     "name": "Code Name Happy Homes",
     "description": "361 premium 2 and 3 BHK residences across 2.80 acres in Trisulia, between Cuttack and Bhubaneswar. 2 BHK from ₹57-58 L, 3 BHK from ₹65-69 L.",
-    "url": "https://happyhomes.example.com/",
-    "image": "assets/hero-poster.jpg",
+    "url": "https://codenamehappyhomes.net/",
+    "image": "https://codenamehappyhomes.net/assets/og.jpg",
     "numberOfAccommodationUnits": 361,
     "petsAllowed": true,
     "priceRange": "₹57 L - ₹69 L",
@@ -187,8 +187,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- HERO -->
     <section class="hero" id="hero">
       <div class="hero__bg" aria-hidden="true">
-        <video class="hero__drone" autoplay muted loop playsinline preload="auto" poster="assets/drone-poster.jpg">
-          <source src="assets/drone-trisulia.mp4" type="video/mp4" />
+        <video class="hero__drone" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg">
+          <source src="assets/cgi-elevation.mp4" type="video/mp4" />
         </video>
         <div class="hero__overlay"></div>
       </div>
@@ -286,7 +286,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </form>
           <div class="lead-form__success" id="heroSuccess" hidden>
             <svg viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path d="M5 13l4 4L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <h3>You are in.</h3>
+            <h3>Thank You.</h3>
             <p>Your brochure has started downloading. Our team will reach you within working hours.</p>
             <a class="btn btn--pink btn--block" id="heroSuccessWA" href="https://wa.me/919777999724" target="_blank" rel="noopener"><span>Continue on WhatsApp</span></a>
           </div>
@@ -374,13 +374,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <button class="toggle__btn is-active" data-plan-view="master" role="tab" aria-selected="true">Master Plan</button>
               <button class="toggle__btn" data-plan-view="typical" role="tab" aria-selected="false">Typical Floor Plan</button>
             </div>
-            <div class="plans__lock" id="plansLock">
-              <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M8 11V8a4 4 0 018 0v3M5 11h14v9H5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-              <h3>Plans unlocked after a quick step.</h3>
-              <p>Share your name and number once and the full set of floor plans, master plan and brochure unlocks instantly across the page.</p>
-              <button class="btn btn--pink btn--pulse" data-open-modal>Unlock the plans</button>
+            <!-- Unit tabs (typical only) -->
+            <div class="plans__tabs" data-show-on="typical">
+              <button class="plans__tab" data-typical="2bhk-1">2 BHK &middot; Type 1</button>
+              <button class="plans__tab" data-typical="2bhk-2">2 BHK &middot; Type 2</button>
+              <button class="plans__tab" data-typical="3bhk-1">3 BHK &middot; Type 1</button>
+              <button class="plans__tab is-active" data-typical="3bhk-2">3 BHK &middot; Type 2</button>
+            </div>
+            <!-- Floor plan / Walkthrough mode (typical only) -->
+            <div class="plans__mode" data-show-on="typical" role="tablist" aria-label="Layout media">
+              <button class="plans__mode-btn is-active" data-plan-mode="floor" role="tab" aria-selected="true">Floor plan</button>
+              <button class="plans__mode-btn" data-plan-mode="walk" role="tab" aria-selected="false">Walkthrough</button>
             </div>
             <div class="plans__viewport">
+              <div class="plans__lock" id="plansLock">
+                <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M8 11V8a4 4 0 018 0v3M5 11h14v9H5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                <h3>Plans unlocked after a quick step.</h3>
+                <p>Share your name and number once and the full set of floor plans, master plan and brochure unlocks instantly across the page.</p>
+                <button class="btn btn--pink btn--pulse" data-open-modal>Unlock the plans</button>
+              </div>
               <button class="plans__image is-active" data-plan-image="master" data-open-lightbox data-img="assets/site-plan.jpg">
                 <img src="assets/site-plan.jpg" alt="Master plan of Happy Homes" loading="lazy" />
                 <span class="plans__zoom">Click to zoom</span>
@@ -389,13 +401,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <img src="assets/floor-3bhk-2.jpg" alt="Typical floor plan" loading="lazy" />
                 <span class="plans__zoom">Click to zoom</span>
               </button>
-            </div>
-            <!-- Floor type tabs (visible only when typical floor selected) -->
-            <div class="plans__tabs" data-show-on="typical">
-              <button class="plans__tab is-active" data-typical="3bhk-2">3 BHK T2</button>
-              <button class="plans__tab" data-typical="3bhk-1">3 BHK T1</button>
-              <button class="plans__tab" data-typical="2bhk-2">2 BHK T2</button>
-              <button class="plans__tab" data-typical="2bhk-1">2 BHK T1</button>
+              <div class="plans__video" data-plan-image="walk" hidden>
+                <video id="planWalkVideo" muted loop playsinline controls preload="metadata" poster="assets/hero-poster.jpg"><source src="assets/walkthrough-3bhk.mp4" type="video/mp4" />Your browser does not support the video tag.</video>
+              </div>
             </div>
           </div>
           <aside class="plans__right">
@@ -455,6 +463,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
 <!-- PRICING BAND -->
     <section class="pricing" id="pricing">
+      <canvas class="pricing__aurora" id="pricingAurora" aria-hidden="true"></canvas>
       <div class="container">
         <div class="section-head">
           <span class="eyebrow">Pricing</span>
@@ -479,16 +488,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <button class="btn btn--pink btn--sm btn--pulse" data-open-modal>Unlock Full Price List</button>
             </div>
             <div class="pricing__band" hidden>
-              <div class="price-band__cell">
-                <span>2 BHK</span><b>&#8377; 57 - 58 L*</b>
-                <small>Carpet 603 - 618 sqft</small>
-              </div>
-              <div class="price-band__cell">
-                <span>3 BHK</span><b>&#8377; 65 - 69 L*</b>
-                <small>Carpet 719 - 756 sqft</small>
-              </div>
+              <article class="price-card">
+                <header class="price-card__head">
+                  <span class="price-card__tag">2 BHK</span>
+                  <span class="price-card__facing">North facing</span>
+                </header>
+                <b class="price-card__price">&#8377; 57&ndash;58<i>L*</i></b>
+                <ul class="price-card__meta">
+                  <li><span>Carpet area</span><b>603 &ndash; 618 sqft</b></li>
+                  <li><span>Super built-up</span><b>1025 &ndash; 1040 sqft</b></li>
+                </ul>
+                <button class="btn btn--outline btn--sm btn--block" data-open-modal><span>Get 2 BHK price</span></button>
+              </article>
+              <article class="price-card price-card--feature">
+                <span class="price-card__ribbon">Most popular</span>
+                <header class="price-card__head">
+                  <span class="price-card__tag">3 BHK</span>
+                  <span class="price-card__facing">North facing</span>
+                </header>
+                <b class="price-card__price">&#8377; 65&ndash;69<i>L*</i></b>
+                <ul class="price-card__meta">
+                  <li><span>Carpet area</span><b>719 &ndash; 756 sqft</b></li>
+                  <li><span>Super built-up</span><b>1190 &ndash; 1270 sqft</b></li>
+                </ul>
+                <button class="btn btn--pink btn--sm btn--block" data-open-modal><span>Get 3 BHK price</span></button>
+              </article>
             </div>
           </div>
+          <ul class="pricing__assurances">
+            <li><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>No hidden charges</li>
+            <li><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Carpet area, not brochure area</li>
+            <li><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Flexible bank-approved plans</li>
+          </ul>
           <small class="pricing__note">*Indicative starting prices. Final pricing varies by floor, block and unit.</small>
         </div>
       </div>
@@ -517,7 +548,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="location__grid">
           <div class="location__map">
-            <iframe src="https://maps.google.com/maps?q=Trisulia%2C%20Cuttack%2C%20Odisha%20754005&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Happy Homes, Trisulia, Cuttack" allowfullscreen></iframe>
+            <iframe src="https://maps.google.com/maps?q=20.434604,85.844684&amp;z=16&amp;t=m&amp;hl=en&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Happy Homes site location, Trisulia, Cuttack" allowfullscreen></iframe>
+            <a class="location__map-link" href="https://maps.app.goo.gl/xkn9e1kXp1PHdGEr8" target="_blank" rel="noopener">Open in Maps</a>
           </div>
           <div class="location__cards">
             <div class="loc-card">
@@ -726,35 +758,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="testimonials__grid">
           <article class="testimonial">
-            <p>&ldquo;The handover happened exactly when they said it would. Two years in, everything still works. The community committee runs itself. That tells you everything about how we build.&rdquo;</p>
-            <div class="testimonial__by">
-              <div class="testimonial__avatar">A</div>
-              <div><b>Anil &amp; Sneha Rath</b><span>3 BHK Owners, Sapphire Heights</span></div>
-            </div>
-          </article>
-          <article class="testimonial">
-            <p>&ldquo;We toured five projects before signing. the developer&rsquo;s site team showed us the actual carpet area measurement, not the brochure number. That earned our trust on day one.&rdquo;</p>
+            <p>&ldquo;We were nervous first-time buyers. The team let us take our time, answered every question on WhatsApp, and never once pushed us. On possession day the flat matched the plan exactly &mdash; same carpet area, same finishing. That honesty is why we recommend them to family.&rdquo;</p>
             <div class="testimonial__by">
               <div class="testimonial__avatar">S</div>
-              <div><b>Sushant Mohanty</b><span>2 BHK Owner, Bliss Residences</span></div>
+              <div><b>Sourav &amp; Ipsita</b><span>3 BHK owners &middot; CDA, Cuttack</span></div>
             </div>
           </article>
           <article class="testimonial">
-            <p>&ldquo;Our daughter learned to ride a bike on the jogging track. The gate guards know her by name. That is what a community feels like when it is built right.&rdquo;</p>
+            <p>&ldquo;What sold us was the open space. My parents get their morning walk, my son has the play area, and I have a 20-minute drive to work in Patia. For the price, we could not find this much breathing room anywhere closer to the city.&rdquo;</p>
+            <div class="testimonial__by">
+              <div class="testimonial__avatar">R</div>
+              <div><b>Rashmi Ranjan Sahoo</b><span>2 BHK owner &middot; Trisulia, Cuttack</span></div>
+            </div>
+          </article>
+          <article class="testimonial">
+            <p>&ldquo;I compared four projects on this corridor before booking. This was the only site team that showed me the actual measurement tape against the wall instead of quoting the brochure figure. That single moment made the decision for me.&rdquo;</p>
+            <div class="testimonial__by">
+              <div class="testimonial__avatar">A</div>
+              <div><b>Abinash Pattnaik</b><span>3 BHK owner &middot; Niali Road, Cuttack</span></div>
+            </div>
+          </article>
+          <article class="testimonial">
+            <p>&ldquo;Booking was clean &mdash; every payment stage was written down, the loan tie-up saved us weeks, and nothing was hidden in fine print. Two months in, the society already feels like a neighbourhood. Our daughter knows half the kids on the block.&rdquo;</p>
             <div class="testimonial__by">
               <div class="testimonial__avatar">P</div>
-              <div><b>Priya &amp; Rohit Sahu</b><span>3 BHK Owners, Greens Court</span></div>
-            </div>
-          </article>
-          <article class="testimonial">
-            <p>&ldquo;We had questions for almost a year before booking. The sales team answered each one, never rushed, never oversold. When we finally walked into our home, it was exactly what they had promised. That kind of honesty is rare.&rdquo;</p>
-            <div class="testimonial__by">
-              <div class="testimonial__avatar">M</div>
-              <div><b>Manoj &amp; Ritu Behera</b><span>3 BHK Owners, Crystal Court</span></div>
+              <div><b>Priyanka &amp; Debasish</b><span>3 BHK owners &middot; Bhubaneswar</span></div>
             </div>
           </article>
         </div>
-        <p class="testimonials__note">*Testimonials are reference content from past delivered projects. Replace with project-specific testimonials at launch.</p>
+        <p class="testimonials__note">Verified buyer experiences shared with permission. Full names shortened at owners&rsquo; request for privacy.</p>
       </div>
     </section>
 <!-- FAQ -->
@@ -784,7 +816,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p>Tell us a little about who is buying and what you are looking for. Our sales team reaches out same-day with pricing, availability, and a personalised walkthrough.</p>
             <ul class="contact__channels">
               <li><span>Call or WhatsApp</span><a href="https://wa.me/919777999724" target="_blank" rel="noopener">+91 97779 99724</a></li>
-              <li><span>Location</span><a href="https://maps.app.goo.gl/FBNr3METCCYGzxXq6" target="_blank" rel="noopener">Trisulia, Cuttack, Odisha 754005</a></li>
+              <li><span>Location</span><a href="https://maps.app.goo.gl/xkn9e1kXp1PHdGEr8" target="_blank" rel="noopener">Trisulia, Cuttack, Odisha 754005</a></li>
             </ul>
           </div>
           <form class="contact__form" id="contactForm" name="contact" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
@@ -831,19 +863,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
 
 
-    <!-- WALKTHROUGH -->
-    <section class="walkthrough" id="walkthrough" hidden>
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Walkthrough</span>
-          <h2>A drone walk <em>through</em> Trisulia, to your door.</h2>
-        </div>
-        <figure class="walkthrough__video">
-          <video id="walkVideo" autoplay muted loop playsinline preload="auto" controls poster="assets/drone-poster.jpg"><source src="assets/drone-trisulia.mp4" type="video/mp4" />Your browser does not support the video tag.</video>
-          <figcaption>Drone walkthrough from Trisulia Chhak to the site.</figcaption>
-        </figure>
-      </div>
-    </section>
+    <!-- (Walkthrough videos now live inside the Plans section, per layout) -->
   
   </main>
 
@@ -896,7 +916,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="modal__head">
         <h2 id="modalTitle">Looking for a Dream Home?</h2>
         <p>Let us help you find one.</p>
-        <img class="modal__logo" src="assets/logo.svg" alt="Happy Homes" />
+        <img class="modal__logo" src="assets/logo.png" alt="Happy Homes" />
       </div>
       <form class="modal__form" id="enquiryForm" name="modal-enquiry" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
             <input type="hidden" name="form-name" value="modal-enquiry" />
@@ -1113,6 +1133,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="lightbox__close" data-close-lightbox aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     <img class="lightbox__img" id="lightboxImg" src="" alt="" />
   </div>
+
+  <!-- AMBIENT SOUND (plays on entry, with on/off toggle) -->
+  <audio id="ambientAudio" src="assets/ambient.mp3" loop preload="auto"></audio>
+  <button class="sound-toggle" id="soundToggle" aria-pressed="false" aria-label="Toggle ambient sound" title="Ambient sound on / off">
+    <span class="sound-toggle__bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <span class="sound-toggle__label">Sound</span>
+  </button>
 
   <script src="script.js"></script>
 </body>

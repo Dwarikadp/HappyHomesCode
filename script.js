@@ -6,7 +6,7 @@
 
   const CONFIG = {
     WHATSAPP_NUMBER: '919777999724',
-    SHEETS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbwJXkS-O94Lue6mvOyMODbh3MPHWWDFCggBh-3-1FWIs9qeQYJNjW7jVdGN6SiixAsc/exec',
+    SHEETS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbyHf5OpyPxUnJ9FQS5tqeN3_h4BZ-2K8WPAJR5yDtC1jZD0TLCPIv8E-4mBzhWDV2_u/exec',
     ENQUIRY_CONVERSION_LABEL: 'AW-XXXXXXXXX/REPLACE_WITH_LABEL',
     BROCHURE_URL: 'assets/brochure.pdf',
     AUTO_POPUP_FIRST_MS: 45000,
@@ -237,8 +237,15 @@
     if (autoPopupTimeout) { clearTimeout(autoPopupTimeout); autoPopupTimeout = null; }
   }
 
-  /* ========== HERO + MODAL + CONTACT + SITE VISIT + VIDEO CALL ========== */
-  function bindForm(formId, source, successHandler) {
+  /* ========== HERO + MODAL + CONTACT + SITE VISIT + VIDEO CALL ==========
+     Every form posts to Netlify + Google Sheet (unchanged), then redirects to
+     thank-you.html. The dedicated /thank-you URL is what GA4 records as the
+     conversion pageview, and the brochure download + WhatsApp hand-off happen
+     there so the redirect never interrupts the file download.                 */
+  const THANK_YOU_URL = 'thank-you.html';
+
+  function bindForm(formId, source, opts) {
+    opts = opts || {};
     const f = $('#' + formId);
     if (!f) return;
     f.addEventListener('submit', async (e) => {
@@ -263,45 +270,109 @@
       const sb = f.querySelector('button[type="submit"]');
       if (sb) { sb.disabled = true; const sp = sb.querySelector('span'); if (sp) sp.textContent = 'Sending...'; }
       const netlifyName = f.getAttribute('name') || '';
+
+      // 1) Keep the existing capture: Netlify Forms + Google Sheet + Ads
       await submitLead(p, netlifyName);
+
+      // 2) Build the WhatsApp hand-off link for the thank-you page
       const hint = source === 'Site Visit form' ? 'Please confirm my free site visit pickup.' :
                    source === 'Video call form' ? 'Please connect me on WhatsApp video.' :
                    'I just downloaded the brochure. Please share pricing.';
       const wa = buildWA(p, hint);
-      const waBtn = $('#heroSuccessWA') || $('#successWA');
-      if (waBtn) waBtn.href = wa;
-      if (successHandler) successHandler(f, p, wa);
-      if (sb) { sb.disabled = false; const sp = sb.querySelector('span'); if (sp) sp.textContent = sb.dataset.label || 'Submit'; }
+      try {
+        sessionStorage.setItem('chh_lead', JSON.stringify({
+          wa: wa,
+          brochure: !!opts.brochure,
+          source: source,
+          name: p.name
+        }));
+      } catch (_) {}
+
+      // 3) Unlock pricing/plans for the return visit, and fire an early GA4 signal
       markLeadDone();
+      try {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'lead_submit', form_source: source });
+        if (typeof window.gtag === 'function') window.gtag('event', 'lead_submit', { form_source: source });
+      } catch (_) {}
+
+      // 4) Off to the GA4 conversion page
+      window.location.href = THANK_YOU_URL;
     });
   }
 
-  bindForm('heroForm', 'Hero inline form', (f, p, wa) => {
-    downloadBrochure();
-    f.style.display = 'none';
-    const hs = $('#heroSuccess'); if (hs) hs.hidden = false;
-  });
-  bindForm('enquiryForm', 'Modal popup', (f, p, wa) => {
-    downloadBrochure();
-    f.hidden = true;
-    if (modalSuccess) modalSuccess.hidden = false;
-    f.reset();
-  });
-  bindForm('contactForm', 'Contact form', (f, p, wa) => {
-    downloadBrochure();
-    f.reset();
-    setTimeout(() => { window.open(wa, '_blank', 'noopener'); }, 400);
-  });
-  bindForm('siteVisitForm', 'Site Visit form', (f, p, wa) => {
-    f.reset();
-    closeAllModals();
-    setTimeout(() => { window.open(wa, '_blank', 'noopener'); }, 400);
-  });
-  bindForm('videoForm', 'Video call form', (f, p, wa) => {
-    f.reset();
-    closeAllModals();
-    setTimeout(() => { window.open(wa, '_blank', 'noopener'); }, 400);
-  });
+  // Lead / brochure forms download the brochure on the thank-you page
+  bindForm('heroForm',      'Hero inline form', { brochure: true });
+  bindForm('enquiryForm',   'Modal popup',      { brochure: true });
+  bindForm('contactForm',   'Contact form',     { brochure: true });
+  // Visit / call intents: no brochure, just the WhatsApp hand-off
+  bindForm('siteVisitForm', 'Site Visit form',  { brochure: false });
+  bindForm('videoForm',     'Video call form',  { brochure: false });
+
+  /* ========== AMBIENT SOUND (cazrd-style, on/off, remembers choice) ========== */
+  (function () {
+    const audio = $('#ambientAudio');
+    const btn = $('#soundToggle');
+    if (!audio || !btn) return;
+    const TARGET = 0.32;              // comfortable ambient level
+    audio.volume = 0;
+    let pref = 'on';
+    try { pref = localStorage.getItem('chh_sound') || 'on'; } catch (_) {}
+
+    let fadeId = null;
+    function fadeTo(v, done) {
+      if (fadeId) clearInterval(fadeId);
+      const from = audio.volume, steps = 16; let i = 0;
+      fadeId = setInterval(() => {
+        i++; audio.volume = Math.min(1, Math.max(0, from + (v - from) * i / steps));
+        if (i >= steps) { clearInterval(fadeId); fadeId = null; audio.volume = v; if (done) done(); }
+      }, 32);
+    }
+    // UI follows the actual audio state
+    audio.addEventListener('play',  () => { btn.classList.add('is-playing');  btn.setAttribute('aria-pressed', 'true'); });
+    audio.addEventListener('pause', () => { btn.classList.remove('is-playing'); btn.setAttribute('aria-pressed', 'false'); });
+
+    function play() {
+      const p = audio.play();
+      if (p && p.then) p.then(() => fadeTo(TARGET)).catch(() => armGesture());
+      else fadeTo(TARGET);
+    }
+    function pause() { fadeTo(0, () => audio.pause()); }
+
+    // If the browser blocks autoplay, start on the first real interaction
+    let armed = false;
+    function armGesture() {
+      if (armed) return; armed = true;
+      const go = (ev) => {
+        if (ev && ev.target && ev.target.closest && ev.target.closest('#soundToggle')) return; // button handles itself
+        if (pref !== 'off' && audio.paused) { const p = audio.play(); if (p && p.then) p.then(() => fadeTo(TARGET)).catch(() => {}); }
+        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(e => window.removeEventListener(e, go, true));
+        armed = false;
+      };
+      ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(e => window.addEventListener(e, go, true));
+    }
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (audio.paused) { pref = 'on';  try { localStorage.setItem('chh_sound', 'on'); }  catch (_) {} play(); }
+      else              { pref = 'off'; try { localStorage.setItem('chh_sound', 'off'); } catch (_) {} pause(); }
+    });
+
+    if (pref !== 'off') play();   // attempt on load; falls back to first-gesture if blocked
+  })();
+
+  /* ========== HERO CGI VIDEO: force autoplay (muted) ========== */
+  (function () {
+    const hv = document.querySelector('.hero__drone');
+    if (!hv) return;
+    const play = () => { try { hv.muted = true; hv.setAttribute('muted',''); const p = hv.play(); if (p && p.catch) p.catch(() => {}); } catch (_) {} };
+    play();
+    if (hv.readyState < 2) hv.addEventListener('loadeddata', play, { once: true });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) play(); });
+    // A single user gesture guarantees playback where autoplay is blocked
+    ['touchstart', 'click', 'scroll'].forEach(evt =>
+      window.addEventListener(evt, play, { once: true, passive: true }));
+  })();
 
   /* ========== WALKTHROUGH VIDEO: nudge play on first scroll-in ========== */
   (function () {
@@ -411,42 +482,84 @@
     }
   } catch (_) {}
 
-  /* ========== PLAN VIEW TOGGLE (Master / Typical) ========== */
-  function updatePlanTypicalTabsVisibility() {
-    const active = $('[data-plan-view].is-active');
-    const view = active ? active.dataset.planView : 'master';
-    $$('.plans__tabs[data-show-on]').forEach(t => t.classList.toggle('is-visible', t.dataset.showOn === view));
-  }
-  document.addEventListener('click', (e) => {
-    const t = e.target.closest('[data-plan-view]');
-    if (!t) return;
-    const key = t.dataset.planView;
-    $$('[data-plan-view]').forEach(b => { const a = b === t; b.classList.toggle('is-active', a); b.setAttribute('aria-selected', String(a)); });
-    $$('[data-plan-image]').forEach(img => img.classList.toggle('is-active', img.dataset.planImage === key));
-    updatePlanTypicalTabsVisibility();
-  });
-  updatePlanTypicalTabsVisibility();
-
-  /* Typical floor sub-tabs */
+  /* ========== PLANS: view (master/typical) + unit + mode (floor/walk) ========== */
   const PLAN_IMG_MAP = {
     '2bhk-1': 'assets/floor-2bhk-1.jpg',
     '2bhk-2': 'assets/floor-2bhk-2.jpg',
     '3bhk-1': 'assets/floor-3bhk-1.jpg',
     '3bhk-2': 'assets/floor-3bhk-2.jpg'
   };
+  const PLAN_WALK_MAP = {
+    '2bhk-1': 'assets/walkthrough-2bhk.mp4',
+    '2bhk-2': 'assets/walkthrough-2bhk.mp4',
+    '3bhk-1': 'assets/walkthrough-3bhk.mp4',
+    '3bhk-2': 'assets/walkthrough-3bhk.mp4'
+  };
+  const planState = { view: 'master', unit: '3bhk-2', mode: 'floor' };
+  const planWalkVideo = $('#planWalkVideo');
+
+  function showOnByView() {
+    $$('[data-show-on]').forEach(t => t.classList.toggle('is-visible', t.dataset.showOn === planState.view));
+  }
+  function renderPlans() {
+    let activeKey = 'master';
+    if (planState.view === 'typical') activeKey = (planState.mode === 'walk') ? 'walk' : 'typical';
+    $$('.plans__image[data-plan-image]').forEach(el => el.classList.toggle('is-active', el.dataset.planImage === activeKey));
+    const vid = $('.plans__video[data-plan-image="walk"]');
+    if (vid) vid.hidden = (activeKey !== 'walk');
+    if (planWalkVideo) {
+      if (activeKey === 'walk') { try { const p = planWalkVideo.play(); if (p && p.catch) p.catch(() => {}); } catch (_) {} }
+      else { try { planWalkVideo.pause(); } catch (_) {} }
+    }
+    showOnByView();
+  }
+
+  // View toggle: Master Plan / Typical Floor Plan
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-plan-view]');
+    if (!t) return;
+    planState.view = t.dataset.planView;
+    if (planState.view === 'typical') planState.mode = 'floor';
+    $$('[data-plan-view]').forEach(b => { const a = b === t; b.classList.toggle('is-active', a); b.setAttribute('aria-selected', String(a)); });
+    $$('[data-plan-mode]').forEach(b => { const a = b.dataset.planMode === planState.mode; b.classList.toggle('is-active', a); b.setAttribute('aria-selected', String(a)); });
+    renderPlans();
+  });
+
+  // Unit tabs: 2 BHK T1/T2, 3 BHK T1/T2
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-typical]');
     if (!t) return;
-    const key = t.dataset.typical;
+    planState.unit = t.dataset.typical;
     $$('[data-typical]').forEach(b => b.classList.toggle('is-active', b === t));
-    $$('[data-plan-detail]').forEach(d => d.hidden = (d.dataset.planDetail !== key));
+    $$('[data-plan-detail]').forEach(d => d.hidden = (d.dataset.planDetail !== planState.unit));
     const typicalImg = $('[data-plan-image="typical"]');
-    if (typicalImg && PLAN_IMG_MAP[key]) {
+    if (typicalImg && PLAN_IMG_MAP[planState.unit]) {
       const img = typicalImg.querySelector('img');
-      if (img) img.src = PLAN_IMG_MAP[key];
-      typicalImg.dataset.img = PLAN_IMG_MAP[key];
+      if (img) img.src = PLAN_IMG_MAP[planState.unit];
+      typicalImg.dataset.img = PLAN_IMG_MAP[planState.unit];
     }
+    if (planWalkVideo && PLAN_WALK_MAP[planState.unit]) {
+      const src = planWalkVideo.querySelector('source');
+      const next = PLAN_WALK_MAP[planState.unit];
+      if (src && src.getAttribute('src') !== next) {
+        src.setAttribute('src', next);
+        planWalkVideo.load();
+      }
+    }
+    renderPlans();
   });
+
+  // Mode toggle: Floor plan / Walkthrough
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-plan-mode]');
+    if (!t) return;
+    planState.mode = t.dataset.planMode;
+    $$('[data-plan-mode]').forEach(b => { const a = b === t; b.classList.toggle('is-active', a); b.setAttribute('aria-selected', String(a)); });
+    renderPlans();
+  });
+
+  showOnByView();
+  renderPlans();
 
   /* ========== EMI Calculator ========== */
   const emiPrice = $('#emiPrice'), emiDown = $('#emiDown'), emiTenure = $('#emiTenure'), emiRate = $('#emiRate');
@@ -570,5 +683,97 @@
   document.addEventListener('click', (e) => {
     if (e.target.closest('[data-open-projects]')) { e.preventDefault(); openProjects(); }
   });
+
+  /* ========== WEBGL AURORA (pricing section background) ==========
+     Self-contained fragment shader, no libraries. Flowing emerald light
+     with gold bands. Falls back silently if WebGL is unavailable, and
+     pauses under prefers-reduced-motion.                                */
+  (function () {
+    const canvas = document.getElementById('pricingAurora');
+    if (!canvas) return;
+    let gl = null;
+    try { gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); } catch (_) {}
+    if (!gl) { canvas.style.display = 'none'; return; }
+
+    const vs = 'attribute vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0); }';
+    const fs = [
+      'precision highp float;',
+      'uniform vec2 u_res; uniform float u_time;',
+      'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }',
+      'float noise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); vec2 u=f*f*(3.0-2.0*f);',
+      '  return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x), mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x), u.y); }',
+      'float fbm(vec2 p){ float v=0.0; float a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }',
+      'void main(){',
+      '  vec2 uv = gl_FragCoord.xy / u_res.xy;',
+      '  vec2 q = uv; q.x *= u_res.x/u_res.y;',
+      '  float t = u_time*0.045;',
+      '  float f = fbm(q*2.0 + vec2(t, t*0.5));',
+      '  f = fbm(q*2.0 + f*1.3 + vec2(-t*0.6, t*0.9));',
+      '  vec3 deep  = vec3(0.020,0.100,0.082);',
+      '  vec3 green = vec3(0.043,0.255,0.200);',
+      '  vec3 gold  = vec3(0.902,0.757,0.290);',
+      '  vec3 col = mix(deep, green, smoothstep(0.25,0.95,f));',
+      '  float band = smoothstep(0.62,0.98,f) * (0.5 + 0.5*sin(u_time*0.28 + uv.y*3.5));',
+      '  col += gold * band * 0.42;',
+      '  float vig = smoothstep(1.2,0.15,length(uv-vec2(0.5,0.42)));',
+      '  col *= 0.5 + 0.6*vig;',
+      '  gl_FragColor = vec4(col,1.0);',
+      '}'
+    ].join('\n');
+
+    function sh(type, src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.style.display='none'; return; }
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'p');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const uRes = gl.getUniformLocation(prog, 'u_res');
+    const uTime = gl.getUniformLocation(prog, 'u_time');
+
+    function resize(){
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const w = canvas.clientWidth || canvas.offsetWidth || window.innerWidth;
+      const h = canvas.clientHeight || canvas.offsetHeight || 480;
+      canvas.width = Math.max(1, Math.floor(w * dpr));
+      canvas.height = Math.max(1, Math.floor(h * dpr));
+      gl.viewport(0,0,canvas.width,canvas.height);
+    }
+    window.addEventListener('resize', resize);
+
+    // Only animate while the section is on screen (saves battery)
+    let visible = false, running = false;
+    const start = performance.now();
+    function frame(now){
+      if (!visible || prm) { running = false; if (prm) drawOnce(now); return; }
+      const t = (now - start)/1000;
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, t);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      requestAnimationFrame(frame);
+    }
+    function drawOnce(now){
+      const t = ((now||performance.now()) - start)/1000;
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, t);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    resize();
+    drawOnce();
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach((e) => {
+        visible = e.isIntersecting;
+        if (visible && !running && !prm) { running = true; requestAnimationFrame(frame); }
+      });
+    }, { threshold: 0.02 });
+    io.observe(canvas);
+  })();
 
 })();
